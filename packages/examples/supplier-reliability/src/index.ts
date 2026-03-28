@@ -35,11 +35,12 @@ export async function createSupplierReliabilityAgent(config: SupplierReliability
   // Set up payment middleware using real payment verifier from config
   const price = '1000'; // Price in base units (e.g., 1000 = $0.001 USDC)
   const network = config.paymentsConfig.network;
-  const payTo = (config.paymentsConfig as { payTo?: string }).payTo;
 
-  if (!payTo || typeof payTo !== 'string' || payTo.length === 0) {
-    throw new Error('Invalid paymentsConfig: payTo must be a non-empty string');
+  if (!('payTo' in config.paymentsConfig) || !config.paymentsConfig.payTo) {
+    throw new Error('payTo is required in paymentsConfig for Supplier Reliability API');
   }
+
+  const payTo = config.paymentsConfig.payTo;
 
   const facilitatorConfig: FacilitatorConfig = {
     url: config.paymentsConfig.facilitatorUrl,
